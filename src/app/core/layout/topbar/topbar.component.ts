@@ -1,41 +1,110 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, ElementRef, HostListener } from '@angular/core';
 import { AuthService } from '../../auth/services/auth.service';
 import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-topbar',
   standalone: true,
+  imports: [CommonModule],
   template: `
-    <header class="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
-      <div>
-        <p class="text-lg font-semibold text-slate-900">Sistema Gym</p>
-        <p class="text-xs text-slate-500">Panel administrativo</p>
-      </div>
-      <div class="flex items-center gap-3">
-        <span class="text-sm text-slate-600">{{ userDisplayName }}</span>
-        <button
-          type="button"
-          (click)="logout()"
-          class="rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-700"
-        >
-          Cerrar sesión
-        </button>
+    <header class="border-b border-white/10 bg-slate-900/65 px-4 py-4 backdrop-blur md:px-6 lg:px-8">
+      <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4">
+        <div>
+          <p class="text-lg font-semibold text-white">Sistema Gym</p>
+          <p class="text-xs text-slate-300">Gestión administrativa centralizada</p>
+        </div>
+
+        <div class="relative">
+          <button
+            type="button"
+            class="flex items-center gap-3 rounded-xl border border-white/10 bg-slate-800/85 px-3 py-2 text-left text-sm text-slate-200 transition hover:border-violet-400/60 hover:bg-slate-700/80"
+            (click)="toggleUserMenu()"
+            aria-haspopup="menu"
+            [attr.aria-expanded]="isUserMenuOpen"
+          >
+            <span class="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-violet-500/35 to-indigo-500/35 ring-1 ring-violet-300/40">
+              <svg viewBox="0 0 24 24" class="h-5 w-5 text-violet-100" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 20c1.8-3.5 4.7-5.2 8-5.2s6.2 1.7 8 5.2"></path>
+              </svg>
+            </span>
+            <span class="hidden sm:block">
+              <span class="block font-medium text-white">{{ userDisplayName }}</span>
+              <span class="block text-xs text-slate-400">{{ userSecondary }}</span>
+            </span>
+            <svg class="h-4 w-4 text-slate-300" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.512a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+            </svg>
+          </button>
+
+          @if (isUserMenuOpen) {
+            <div class="absolute right-0 z-20 mt-2 w-72 overflow-hidden rounded-2xl border border-white/10 bg-slate-900/95 shadow-2xl shadow-violet-900/40" role="menu">
+              <div class="border-b border-white/10 p-4">
+                <p class="text-sm font-semibold text-white">{{ userDisplayName }}</p>
+                <p class="truncate text-xs text-slate-400">{{ userSecondary }}</p>
+              </div>
+              <div class="p-2">
+                <button type="button" (click)="placeholderAction('Mi perfil')" class="menu-item" role="menuitem">Mi perfil</button>
+                <button type="button" (click)="placeholderAction('Configuración')" class="menu-item" role="menuitem">Configuración</button>
+                <button type="button" (click)="placeholderAction('Cambiar contraseña')" class="menu-item" role="menuitem">Cambiar contraseña</button>
+                <div class="my-2 border-t border-white/10"></div>
+                <button type="button" (click)="logout()" class="menu-item text-rose-300 hover:bg-rose-500/10" role="menuitem">Cerrar sesión</button>
+              </div>
+            </div>
+          }
+        </div>
       </div>
     </header>
   `,
+  styles: `
+    .menu-item {
+      @apply flex w-full rounded-lg px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10;
+    }
+  `,
 })
 export class TopbarComponent {
+  isUserMenuOpen = false;
+
   constructor(
     private readonly authService: AuthService,
     private readonly toastService: ToastService,
+    private readonly elementRef: ElementRef<HTMLElement>,
   ) {}
 
   get userDisplayName(): string {
     return this.authService.getCurrentUser()?.nombre || 'Administrador';
   }
 
+  get userSecondary(): string {
+    const user = this.authService.getCurrentUser();
+    return user?.email || user?.username || 'admin@sistema.gym';
+  }
+
+  toggleUserMenu(): void {
+    this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
+
+  placeholderAction(option: string): void {
+    this.isUserMenuOpen = false;
+    this.toastService.info(`${option} estará disponible próximamente.`);
+  }
+
   logout(): void {
+    this.isUserMenuOpen = false;
     this.authService.logout();
     this.toastService.info('Sesión cerrada correctamente.');
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: MouseEvent): void {
+    if (!this.isUserMenuOpen) {
+      return;
+    }
+
+    const target = event.target as Node | null;
+    if (target && !this.elementRef.nativeElement.contains(target)) {
+      this.isUserMenuOpen = false;
+    }
   }
 }

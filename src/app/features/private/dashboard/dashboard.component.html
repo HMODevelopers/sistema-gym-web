@@ -1,8 +1,13 @@
 <section class="space-y-6">
-      <app-page-header [title]="'Dashboard'" [description]="'Resumen general del gimnasio.'" />
-      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        @for (card of cards; track card.title) {
-          <app-module-card [title]="card.title" [description]="card.description" [tag]="card.tag" />
-        }
-      </div>
-    </section>
+  <app-page-header [title]="'Dashboard'" [description]="'Resumen general del gimnasio y estado operativo del día.'" />
+
+  <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    @for (card of cards; track card.title) {
+      <app-module-card [title]="card.title" [description]="card.description" [tag]="card.tag" />
+    }
+  </div>
+
+  <article class="rounded-2xl border border-dashed border-violet-300/30 bg-slate-900/50 p-5 text-sm text-slate-300">
+    Próximamente: métricas en tiempo real, alertas y comparativos por sucursal.
+  </article>
+</section>
