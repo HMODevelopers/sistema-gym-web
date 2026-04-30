@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../auth/services/auth.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-topbar',
@@ -11,7 +12,7 @@ import { AuthService } from '../../auth/services/auth.service';
         <p class="text-xs text-slate-500">Panel administrativo</p>
       </div>
       <div class="flex items-center gap-3">
-        <span class="text-sm text-slate-600">Administrador</span>
+        <span class="text-sm text-slate-600">{{ userDisplayName }}</span>
         <button
           type="button"
           (click)="logout()"
@@ -24,9 +25,17 @@ import { AuthService } from '../../auth/services/auth.service';
   `,
 })
 export class TopbarComponent {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly toastService: ToastService,
+  ) {}
+
+  get userDisplayName(): string {
+    return this.authService.getCurrentUser()?.nombre || 'Administrador';
+  }
 
   logout(): void {
     this.authService.logout();
+    this.toastService.info('Sesión cerrada correctamente.');
   }
 }

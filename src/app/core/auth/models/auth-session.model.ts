@@ -1,7 +1,8 @@
+import { AuthUser } from './auth-user.model';
+
 export interface AuthSession {
   token: string;
-  user?: {
-    name: string;
-    email?: string;
-  };
+  user: AuthUser;
+  roles: string[];
+  permisos: string[];
 }
