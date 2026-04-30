@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { AuthService } from '../../auth/services/auth.service';
 import { ThemeService } from '../../services/theme.service';
 import { ToastService } from '../../services/toast.service';
@@ -11,10 +11,16 @@ import { ToastService } from '../../services/toast.service';
   template: `
     <header class="relative z-40 overflow-visible border-b border-slate-200 bg-white/90 px-4 py-4 backdrop-blur dark:border-white/10 dark:bg-slate-900/65 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
       <div class="flex w-full items-center justify-between gap-4">
-        <div>
-          <p class="text-lg font-semibold text-slate-900 dark:text-white">Sistema Gym</p>
-          <p class="text-xs text-slate-600 dark:text-slate-300">Gestión administrativa centralizada</p>
-        </div>
+        <button
+          type="button"
+          (click)="toggleSidebar()"
+          class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-700 transition hover:border-violet-400/70 hover:bg-violet-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/60 dark:border-white/20 dark:bg-slate-800/85 dark:text-slate-200 dark:hover:border-violet-300/70 dark:hover:bg-slate-700/80"
+          [attr.aria-label]="sidebarCollapsed ? 'Expandir navegación' : 'Colapsar navegación'"
+        >
+          <svg class="h-5 w-5 transition-transform duration-200" [class.rotate-180]="sidebarCollapsed" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M12.5 4.5L7 10l5.5 5.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
 
         <div class="relative z-30 flex items-center gap-2 sm:gap-3">
           <button
@@ -84,6 +90,8 @@ import { ToastService } from '../../services/toast.service';
   `,
 })
 export class TopbarComponent {
+  @Input() sidebarCollapsed = false;
+  @Output() sidebarToggle = new EventEmitter<void>();
   isUserMenuOpen = false;
 
   constructor(
@@ -120,6 +128,10 @@ export class TopbarComponent {
 
   toggleTheme(): void {
     this.themeService.toggleTheme();
+  }
+
+  toggleSidebar(): void {
+    this.sidebarToggle.emit();
   }
 
   placeholderAction(option: string): void {

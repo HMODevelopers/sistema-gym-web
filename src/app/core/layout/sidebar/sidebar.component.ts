@@ -33,13 +33,6 @@ type SidebarIcon = 'dashboard' | 'operacion' | 'comercial' | 'catalogos' | 'admi
             <span class="text-sm font-bold text-violet-700 dark:text-violet-200">SG</span>
           </div>
     
-
-      <button type="button" (click)="toggleCollapsed()" class="absolute -right-4 top-5 z-30 inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-300/90 bg-white/95 text-slate-700 shadow-md shadow-slate-400/25 transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700 dark:border-white/20 dark:bg-slate-900/95 dark:text-slate-100 dark:shadow-black/45 dark:hover:border-violet-300/60 dark:hover:bg-violet-500/20 dark:hover:text-violet-100" [attr.aria-label]="collapsed ? 'Expandir navegación' : 'Colapsar navegación'">
-        <svg class="h-5 w-5 transition-transform duration-200" [class.rotate-180]="collapsed" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-          <path d="M12.5 4.5L7 10l5.5 5.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-
       @if (!collapsed) {
             <div class="min-w-0 flex-1">
               <p class="truncate text-base font-semibold tracking-wide text-slate-900 dark:text-white">Sistema Gym</p>

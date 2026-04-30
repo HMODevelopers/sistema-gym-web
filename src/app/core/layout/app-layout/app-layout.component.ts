@@ -19,7 +19,7 @@ import { TopbarComponent } from '../topbar/topbar.component';
       </div>
 
       <div class="relative z-0 flex min-w-0 flex-1 flex-col">
-        <app-topbar />
+        <app-topbar [sidebarCollapsed]="sidebarCollapsed" (sidebarToggle)="setSidebarCollapsed(!sidebarCollapsed)" />
 
         <main class="flex-1 px-4 pb-6 pt-5 md:px-6 md:pt-6 lg:px-8 xl:px-10 2xl:px-12">
           <div class="w-full">
