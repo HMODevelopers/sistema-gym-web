@@ -16,7 +16,26 @@ import { ToastService } from '../../services/toast.service';
           <p class="text-xs text-slate-600 dark:text-slate-300">Gestión administrativa centralizada</p>
         </div>
 
-        <div class="relative z-50">
+        <div class="relative z-50 flex items-center gap-2 sm:gap-3">
+          <button
+            type="button"
+            class="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 transition hover:border-violet-400/60 hover:bg-violet-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/60 dark:border-white/10 dark:bg-slate-800/85 dark:text-slate-200 dark:hover:bg-slate-700/80"
+            (click)="toggleTheme()"
+            [attr.aria-label]="themeToggleAriaLabel"
+            [attr.title]="themeToggleTitle"
+          >
+            @if (isDarkMode) {
+              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.55 1.55M17.52 17.52l1.55 1.55M2 12h2.2M19.8 12H22M4.93 19.07l1.55-1.55M17.52 6.48l1.55-1.55"></path>
+              </svg>
+            } @else {
+              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1111.21 3c0 .22-.01.43-.01.65A7 7 0 0020.35 13c.22 0 .43 0 .65-.01z"></path>
+              </svg>
+            }
+          </button>
+
           <button
             type="button"
             class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 text-left text-sm text-slate-700 transition hover:border-violet-400/60 hover:bg-violet-50 dark:border-white/10 dark:bg-slate-800/85 dark:text-slate-200 dark:hover:bg-slate-700/80"
@@ -49,10 +68,6 @@ import { ToastService } from '../../services/toast.service';
                 <button type="button" (click)="placeholderAction('Mi perfil')" class="menu-item" role="menuitem">Mi perfil</button>
                 <button type="button" (click)="placeholderAction('Configuración')" class="menu-item" role="menuitem">Configuración</button>
                 <button type="button" (click)="placeholderAction('Cambiar contraseña')" class="menu-item" role="menuitem">Cambiar contraseña</button>
-                <button type="button" (click)="toggleTheme()" class="menu-item" role="menuitem">
-                  <span>{{ themeActionLabel }}</span>
-                  <span class="text-xs">{{ isDarkMode ? '☀️' : '🌙' }}</span>
-                </button>
                 <div class="my-2 border-t border-slate-200 dark:border-white/10"></div>
                 <button type="button" (click)="logout()" class="menu-item text-rose-500 hover:bg-rose-500/10 dark:text-rose-300" role="menuitem">Cerrar sesión</button>
               </div>
@@ -91,7 +106,11 @@ export class TopbarComponent {
     return this.themeService.isDarkMode();
   }
 
-  get themeActionLabel(): string {
+  get themeToggleAriaLabel(): string {
+    return this.isDarkMode ? 'Activar modo claro' : 'Activar modo oscuro';
+  }
+
+  get themeToggleTitle(): string {
     return this.isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
   }
 

@@ -7,11 +7,11 @@ export type ThemeMode = 'light' | 'dark';
 })
 export class ThemeService {
   private readonly storageKey = 'sistema_gym_theme';
-  private currentTheme: ThemeMode = 'dark';
+  private currentTheme: ThemeMode = 'light';
 
   initTheme(): void {
     const storedTheme = this.getStoredTheme();
-    const themeToApply = storedTheme ?? 'dark';
+    const themeToApply = storedTheme ?? 'light';
     this.applyTheme(themeToApply);
   }
 
