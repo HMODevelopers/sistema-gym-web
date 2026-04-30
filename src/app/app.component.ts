@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { GlobalLoaderComponent } from './shared/components/global-loader/global-loader.component';
 import { ToastContainerComponent } from './shared/components/toast-container/toast-container.component';
+import { ThemeService } from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -10,4 +11,8 @@ import { ToastContainerComponent } from './shared/components/toast-container/toa
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor(private readonly themeService: ThemeService) {
+    this.themeService.initTheme();
+  }
+}

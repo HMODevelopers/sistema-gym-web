@@ -8,7 +8,7 @@ import { TopbarComponent } from '../topbar/topbar.component';
   standalone: true,
   imports: [RouterOutlet, SidebarComponent, TopbarComponent],
   template: `
-    <div class="relative flex min-h-screen bg-slate-950 text-slate-100">
+    <div class="relative flex min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <div class="pointer-events-none absolute inset-0 overflow-hidden">
         <div class="absolute -left-20 top-0 h-72 w-72 rounded-full bg-violet-600/20 blur-3xl"></div>
         <div class="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-indigo-500/20 blur-3xl"></div>
@@ -27,10 +27,10 @@ import { TopbarComponent } from '../topbar/topbar.component';
           </div>
         </main>
 
-        <footer class="border-t border-white/10 bg-slate-900/70 px-4 py-4 backdrop-blur md:px-6 lg:px-8 xl:px-10 2xl:px-12">
-          <div class="flex w-full flex-col gap-3 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+        <footer class="border-t border-slate-200 bg-white/80 dark:border-white/10 dark:bg-slate-900/70 px-4 py-4 backdrop-blur md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+          <div class="flex w-full flex-col gap-3 text-xs text-slate-600 dark:text-slate-400 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p class="font-semibold uppercase tracking-wide text-slate-200">Sistema Gym</p>
+              <p class="font-semibold uppercase tracking-wide text-slate-700 dark:text-slate-200">Sistema Gym</p>
               <p class="mt-1">Sistema administrativo para operación de gimnasio.</p>
             </div>
             <div class="text-left sm:text-right">
