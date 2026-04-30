@@ -10,8 +10,11 @@ import { AuthUser } from '../models/auth-user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly authTokenKey = 'sistema_gym_auth_token';
-  private readonly authSessionKey = 'sistema_gym_auth_session';
+  private readonly authTokenKey = 'sistema_gym_token';
+  private readonly authUserKey = 'sistema_gym_user';
+  private readonly authRolesKey = 'sistema_gym_roles';
+  private readonly authPermisosKey = 'sistema_gym_permisos';
+  private readonly authSessionKey = 'sistema_gym_session';
 
   constructor(
     private readonly http: HttpClient,
@@ -58,11 +61,17 @@ export class AuthService {
 
   setSession(session: AuthSession): void {
     localStorage.setItem(this.authTokenKey, session.token);
+    localStorage.setItem(this.authUserKey, JSON.stringify(session.user));
+    localStorage.setItem(this.authRolesKey, JSON.stringify(session.roles));
+    localStorage.setItem(this.authPermisosKey, JSON.stringify(session.permisos));
     localStorage.setItem(this.authSessionKey, JSON.stringify(session));
   }
 
   clearSession(): void {
     localStorage.removeItem(this.authTokenKey);
+    localStorage.removeItem(this.authUserKey);
+    localStorage.removeItem(this.authRolesKey);
+    localStorage.removeItem(this.authPermisosKey);
     localStorage.removeItem(this.authSessionKey);
   }
 
@@ -85,14 +94,16 @@ export class AuthService {
   }
 
   private mapSession(response: AuthLoginResponse): AuthSession {
-    const userRoles = response.user.roles ?? [];
-    const userPermisos = response.user.permisos ?? [];
+    const token = response.data?.token?.trim();
+    if (!token) {
+      throw new Error('La respuesta de autenticación no incluye token.');
+    }
 
     return {
-      token: response.token,
-      user: response.user,
-      roles: response.roles ?? userRoles,
-      permisos: response.permisos ?? userPermisos,
+      token,
+      user: response.data.usuario,
+      roles: response.data.roles ?? [],
+      permisos: response.data.permisos ?? [],
     };
   }
 }
