@@ -15,7 +15,7 @@ import { TopbarComponent } from '../topbar/topbar.component';
       </div>
 
       <div class="relative hidden md:block">
-        <app-sidebar />
+        <app-sidebar [collapsed]="sidebarCollapsed" (collapsedChange)="setSidebarCollapsed($event)" />
       </div>
 
       <div class="relative z-0 flex min-w-0 flex-1 flex-col">
@@ -43,4 +43,17 @@ import { TopbarComponent } from '../topbar/topbar.component';
     </div>
   `,
 })
-export class AppLayoutComponent {}
+export class AppLayoutComponent {
+  private readonly sidebarStorageKey = 'sistema_gym_sidebar_collapsed';
+  sidebarCollapsed = this.readSidebarCollapsed();
+
+  setSidebarCollapsed(collapsed: boolean): void {
+    this.sidebarCollapsed = collapsed;
+    localStorage.setItem(this.sidebarStorageKey, JSON.stringify(collapsed));
+  }
+
+  private readSidebarCollapsed(): boolean {
+    const raw = localStorage.getItem(this.sidebarStorageKey);
+    return raw ? raw === 'true' : false;
+  }
+}

@@ -16,7 +16,7 @@ import { ToastService } from '../../services/toast.service';
           <p class="text-xs text-slate-600 dark:text-slate-300">Gestión administrativa centralizada</p>
         </div>
 
-        <div class="relative z-50 flex items-center gap-2 sm:gap-3">
+        <div class="relative z-30 flex items-center gap-2 sm:gap-3">
           <button
             type="button"
             class="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 transition hover:border-violet-400/60 hover:bg-violet-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/60 dark:border-white/10 dark:bg-slate-800/85 dark:text-slate-200 dark:hover:bg-slate-700/80"
@@ -59,7 +59,7 @@ import { ToastService } from '../../services/toast.service';
           </button>
 
           @if (isUserMenuOpen) {
-            <div class="absolute right-0 z-[120] mt-2 w-72 overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-2xl shadow-slate-300/40 dark:border-white/10 dark:bg-slate-900/95 dark:shadow-violet-900/40" role="menu">
+            <div class="absolute right-0 top-full z-50 mt-3 w-72 overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xl shadow-slate-300/30 ring-1 ring-black/5 dark:border-white/10 dark:bg-slate-900/98 dark:shadow-black/40 dark:ring-white/10" role="menu">
               <div class="border-b border-slate-200 p-4 dark:border-white/10">
                 <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ userDisplayName }}</p>
                 <p class="truncate text-xs text-slate-500 dark:text-slate-300">{{ userSecondary }}</p>
