@@ -18,17 +18,17 @@ import { TopbarComponent } from '../topbar/topbar.component';
         <app-sidebar />
       </div>
 
-      <div class="relative flex min-w-0 flex-1 flex-col">
+      <div class="relative z-0 flex min-w-0 flex-1 flex-col">
         <app-topbar />
 
-        <main class="flex-1 px-4 pb-6 pt-5 md:px-6 md:pt-6 lg:px-8">
-          <div class="mx-auto w-full max-w-7xl">
+        <main class="flex-1 px-4 pb-6 pt-5 md:px-6 md:pt-6 lg:px-8 xl:px-10 2xl:px-12">
+          <div class="w-full">
             <router-outlet />
           </div>
         </main>
 
-        <footer class="border-t border-white/10 bg-slate-900/70 px-4 py-4 backdrop-blur md:px-6 lg:px-8">
-          <div class="mx-auto flex w-full max-w-7xl flex-col gap-3 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+        <footer class="border-t border-white/10 bg-slate-900/70 px-4 py-4 backdrop-blur md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+          <div class="flex w-full flex-col gap-3 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p class="font-semibold uppercase tracking-wide text-slate-200">Sistema Gym</p>
               <p class="mt-1">Sistema administrativo para operación de gimnasio.</p>

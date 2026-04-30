@@ -8,14 +8,14 @@ import { ToastService } from '../../services/toast.service';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <header class="border-b border-white/10 bg-slate-900/65 px-4 py-4 backdrop-blur md:px-6 lg:px-8">
-      <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4">
+    <header class="relative z-40 overflow-visible border-b border-white/10 bg-slate-900/65 px-4 py-4 backdrop-blur md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div class="flex w-full items-center justify-between gap-4">
         <div>
           <p class="text-lg font-semibold text-white">Sistema Gym</p>
           <p class="text-xs text-slate-300">Gestión administrativa centralizada</p>
         </div>
 
-        <div class="relative">
+        <div class="relative z-50">
           <button
             type="button"
             class="flex items-center gap-3 rounded-xl border border-white/10 bg-slate-800/85 px-3 py-2 text-left text-sm text-slate-200 transition hover:border-violet-400/60 hover:bg-slate-700/80"
@@ -39,7 +39,7 @@ import { ToastService } from '../../services/toast.service';
           </button>
 
           @if (isUserMenuOpen) {
-            <div class="absolute right-0 z-20 mt-2 w-72 overflow-hidden rounded-2xl border border-white/10 bg-slate-900/95 shadow-2xl shadow-violet-900/40" role="menu">
+            <div class="absolute right-0 z-[120] mt-2 w-72 overflow-hidden rounded-2xl border border-white/10 bg-slate-900/95 shadow-2xl shadow-violet-900/40" role="menu">
               <div class="border-b border-white/10 p-4">
                 <p class="text-sm font-semibold text-white">{{ userDisplayName }}</p>
                 <p class="truncate text-xs text-slate-400">{{ userSecondary }}</p>
