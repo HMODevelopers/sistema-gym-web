@@ -38,7 +38,7 @@ type SidebarIcon = 'dashboard' | 'operacion' | 'comercial' | 'catalogos' | 'admi
               <p class="text-xs text-slate-600 dark:text-slate-300">Panel administrativo</p>
             </div>
           }
-          <button type="button" (click)="toggleCollapsed()" class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 transition hover:bg-violet-500/10 hover:text-violet-700 dark:text-slate-300 dark:hover:bg-violet-400/10 dark:hover:text-violet-100" [attr.aria-label]="collapsed ? 'Expandir navegación lateral' : 'Colapsar navegación lateral'">
+          <button type="button" (click)="toggleCollapsed()" class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-300/90 bg-white/85 text-slate-700 shadow-sm transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700 dark:border-white/15 dark:bg-slate-900/70 dark:text-slate-200 dark:hover:border-violet-300/60 dark:hover:bg-violet-500/15 dark:hover:text-violet-100" [attr.aria-label]="collapsed ? 'Expandir navegación lateral' : 'Colapsar navegación lateral'">
             <svg class="h-5 w-5 transition-transform duration-200" [class.rotate-180]="collapsed" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8">
               <path d="M12.5 4.5L7 10l5.5 5.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -82,7 +82,7 @@ type SidebarIcon = 'dashboard' | 'operacion' | 'comercial' | 'catalogos' | 'admi
                   @for (child of entry.children; track child.path) {
                     <a [routerLink]="child.path" class="block border-l-2 px-3 py-2 text-sm transition"
                       [class]="isExactRouteActive(child.path)
-                        ? 'border-violet-400 text-slate-900 dark:border-violet-300 dark:text-slate-100'
+                        ? 'border-violet-400 bg-violet-500/5 text-slate-900 dark:border-violet-300 dark:bg-violet-400/10 dark:text-slate-100'
                         : 'border-transparent text-slate-600 hover:border-violet-300/70 hover:text-violet-700 dark:text-slate-300 dark:hover:border-violet-300/70 dark:hover:text-violet-100'">
                       {{ child.label }}
                     </a>
@@ -161,14 +161,38 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ngOnInit(): void { this.expandedGroups = this.readStoredGroups(); this.ensureRouteGroupOpen(this.router.url); this.subscription.add(this.router.events.pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd)).subscribe((event) => this.ensureRouteGroupOpen(event.urlAfterRedirects))); }
   ngOnDestroy(): void { this.subscription.unsubscribe(); }
   toggleCollapsed(): void { this.collapsedChange.emit(!this.collapsed); }
-  toggleGroup(groupKey: string): void { this.expandedGroups[groupKey] = !this.expandedGroups[groupKey]; this.persistExpandedGroups(); }
+  toggleGroup(groupKey: string): void {
+    const shouldOpen = !this.expandedGroups[groupKey];
+    this.expandedGroups = shouldOpen ? this.createSingleOpenState(groupKey) : {};
+    this.persistExpandedGroups();
+  }
   isGroupExpanded(groupKey: string): boolean { return Boolean(this.expandedGroups[groupKey]); }
   isGroupHighlighted(group: NavGroup): boolean { return this.isGroupExpanded(group.key) || this.isGroupRouteActive(group); }
   isExactRouteActive(path: string): boolean { return this.router.isActive(path, { paths: 'exact', queryParams: 'ignored', fragment: 'ignored', matrixParams: 'ignored' }); }
   private isGroupRouteActive(group: NavGroup): boolean { return group.children.some((child) => this.isExactRouteActive(child.path)); }
-  private ensureRouteGroupOpen(url: string): void { for (const entry of this.navEntries) { if (entry.type !== 'group') continue; if (entry.children.some((child) => this.isPathInUrl(child.path, url))) this.expandedGroups[entry.key] = true; } this.persistExpandedGroups(); }
+  private ensureRouteGroupOpen(url: string): void {
+    const activeGroupKey = this.findGroupByUrl(url)?.key;
+    this.expandedGroups = activeGroupKey ? this.createSingleOpenState(activeGroupKey) : {};
+    this.persistExpandedGroups();
+  }
   private isPathInUrl(path: string, url: string): boolean { return url === path || url.startsWith(`${path}/`) || url.startsWith(`${path}?`); }
-  private readStoredGroups(): Record<string, boolean> { const raw = localStorage.getItem(this.storageKey); if (!raw) return {}; try { return JSON.parse(raw) as Record<string, boolean>; } catch { return {}; } }
+  private findGroupByUrl(url: string): NavGroup | undefined {
+    return this.navEntries.find((entry): entry is NavGroup =>
+      entry.type === 'group' && entry.children.some((child) => this.isPathInUrl(child.path, url)),
+    );
+  }
+  private createSingleOpenState(groupKey: string): Record<string, boolean> { return { [groupKey]: true }; }
+  private readStoredGroups(): Record<string, boolean> {
+    const raw = localStorage.getItem(this.storageKey);
+    if (!raw) return {};
+    try {
+      const parsed = JSON.parse(raw) as Record<string, boolean>;
+      const openGroup = Object.entries(parsed).find(([, isOpen]) => isOpen)?.[0];
+      return openGroup ? this.createSingleOpenState(openGroup) : {};
+    } catch {
+      return {};
+    }
+  }
   private persistExpandedGroups(): void { localStorage.setItem(this.storageKey, JSON.stringify(this.expandedGroups)); }
   getIcon(icon: SidebarIcon): string { const classes = 'h-5 w-5'; switch (icon) { case 'dashboard': return `<svg class="${classes}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 11.5l8.5-7 8.5 7" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10.5V20h12v-9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`; case 'operacion': return `<svg class="${classes}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 4v5c0 4.4-2.8 7.8-7 9-4.2-1.2-7-4.6-7-9V7l7-4z"/><path d="M8 12h8" stroke-linecap="round"/></svg>`; case 'comercial': return `<svg class="${classes}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 19v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1"/><circle cx="9.5" cy="8" r="3"/><path d="M17 11a3 3 0 1 1 0 6"/></svg>`; case 'catalogos': return `<svg class="${classes}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h6l2 2h10v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/><path d="M3 7V5a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v2"/></svg>`; case 'administracion': return `<svg class="${classes}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .33 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.4-1.7 1.7 1.7 0 0 0-1 .2 1.7 1.7 0 0 0-.6.5l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.1-.4H3.4a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 5.2 9.2a1.7 1.7 0 0 0-.2-1 1.7 1.7 0 0 0-.5-.6l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 .4-1.1V3.4a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1.4 1.7 1.7 1.7 0 0 0 1-.2 1.7 1.7 0 0 0 .6-.5l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.2.3.3.7.3 1.1v.1a2 2 0 1 1 0 4h-.1c-.4 0-.8.1-1.1.3z"/></svg>`; case 'analisis': return `<svg class="${classes}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V6" stroke-linecap="round"/><path d="M4 20h16" stroke-linecap="round"/><path d="M8 16v-3M12 16V9M16 16v-6" stroke-linecap="round"/></svg>`; } }
 }
