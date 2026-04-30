@@ -51,7 +51,7 @@ import { ToastService } from '../../services/toast.service';
             </span>
             <span class="hidden sm:block">
               <span class="block font-medium text-slate-900 dark:text-white">{{ userDisplayName }}</span>
-              <span class="block text-xs text-slate-500 dark:text-slate-400">{{ userSecondary }}</span>
+              <span class="block text-xs text-slate-500 dark:text-slate-300">{{ userSecondary }}</span>
             </span>
             <svg class="h-4 w-4 text-slate-500 dark:text-slate-300" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.512a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
@@ -61,8 +61,8 @@ import { ToastService } from '../../services/toast.service';
           @if (isUserMenuOpen) {
             <div class="absolute right-0 z-[120] mt-2 w-72 overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-2xl shadow-slate-300/40 dark:border-white/10 dark:bg-slate-900/95 dark:shadow-violet-900/40" role="menu">
               <div class="border-b border-slate-200 p-4 dark:border-white/10">
-                <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ userDisplayName }}</p>
-                <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ userSecondary }}</p>
+                <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ userDisplayName }}</p>
+                <p class="truncate text-xs text-slate-500 dark:text-slate-300">{{ userSecondary }}</p>
               </div>
               <div class="p-2">
                 <button type="button" (click)="placeholderAction('Mi perfil')" class="menu-item" role="menuitem">Mi perfil</button>
@@ -79,7 +79,7 @@ import { ToastService } from '../../services/toast.service';
   `,
   styles: `
     .menu-item {
-      @apply flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/10;
+      @apply flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:text-white;
     }
   `,
 })
@@ -120,7 +120,6 @@ export class TopbarComponent {
 
   toggleTheme(): void {
     this.themeService.toggleTheme();
-    this.toastService.info(`Tema ${this.themeService.getTheme() === 'dark' ? 'oscuro' : 'claro'} activado.`);
   }
 
   placeholderAction(option: string): void {
