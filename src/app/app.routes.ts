@@ -1,18 +1,18 @@
 import { Routes } from '@angular/router';
 import { AppLayoutComponent } from './core/layout/app-layout/app-layout.component';
 import { authGuard } from './core/guards/auth.guard';
-import { LoginComponent } from './features/auth/pages/login/login.component';
-import { DashboardPageComponent } from './features/dashboard/pages/dashboard-page/dashboard-page.component';
-import { RecepcionPageComponent } from './features/recepcion/pages/recepcion-page/recepcion-page.component';
-import { ClientesPageComponent } from './features/clientes/pages/clientes-page/clientes-page.component';
-import { PlanesPageComponent } from './features/planes/pages/planes-page/planes-page.component';
-import { MembresiasPageComponent } from './features/membresias/pages/membresias-page/membresias-page.component';
-import { PagosPageComponent } from './features/pagos/pages/pagos-page/pagos-page.component';
-import { AccesosPageComponent } from './features/accesos/pages/accesos-page/accesos-page.component';
-import { ReportesPageComponent } from './features/reportes/pages/reportes-page/reportes-page.component';
-import { UsuariosPageComponent } from './features/usuarios/pages/usuarios-page/usuarios-page.component';
-import { RolesPageComponent } from './features/roles/pages/roles-page/roles-page.component';
-import { SucursalesPageComponent } from './features/sucursales/pages/sucursales-page/sucursales-page.component';
+import { LoginComponent } from './features/public/auth/login/login.component';
+import { DashboardComponent } from './features/private/dashboard/dashboard.component';
+import { RecepcionComponent } from './features/private/recepcion/recepcion.component';
+import { ClientesComponent } from './features/private/clientes/clientes.component';
+import { PlanesComponent } from './features/private/planes/planes.component';
+import { MembresiasComponent } from './features/private/membresias/membresias.component';
+import { PagosComponent } from './features/private/pagos/pagos.component';
+import { AccesosComponent } from './features/private/accesos/accesos.component';
+import { ReportesComponent } from './features/private/reportes/reportes.component';
+import { UsuariosComponent } from './features/private/usuarios/usuarios.component';
+import { RolesComponent } from './features/private/roles/roles.component';
+import { SucursalesComponent } from './features/private/sucursales/sucursales.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -22,17 +22,17 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
-      { path: 'dashboard', component: DashboardPageComponent },
-      { path: 'recepcion', component: RecepcionPageComponent },
-      { path: 'clientes', component: ClientesPageComponent },
-      { path: 'planes', component: PlanesPageComponent },
-      { path: 'membresias', component: MembresiasPageComponent },
-      { path: 'pagos', component: PagosPageComponent },
-      { path: 'accesos', component: AccesosPageComponent },
-      { path: 'reportes', component: ReportesPageComponent },
-      { path: 'usuarios', component: UsuariosPageComponent },
-      { path: 'roles', component: RolesPageComponent },
-      { path: 'sucursales', component: SucursalesPageComponent },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'recepcion', component: RecepcionComponent },
+      { path: 'clientes', component: ClientesComponent },
+      { path: 'planes', component: PlanesComponent },
+      { path: 'membresias', component: MembresiasComponent },
+      { path: 'pagos', component: PagosComponent },
+      { path: 'accesos', component: AccesosComponent },
+      { path: 'reportes', component: ReportesComponent },
+      { path: 'usuarios', component: UsuariosComponent },
+      { path: 'roles', component: RolesComponent },
+      { path: 'sucursales', component: SucursalesComponent },
     ],
   },
   { path: '**', redirectTo: 'dashboard' },

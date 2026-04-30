@@ -1,0 +1,8 @@
+<section class="space-y-6">
+      <app-page-header [title]="'Reportes'" [description]="'Reportes operativos y administrativos.'" />
+      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        @for (card of cards; track card.title) {
+          <app-module-card [title]="card.title" [description]="card.description" [tag]="card.tag" />
+        }
+      </div>
+    </section>
