@@ -26,23 +26,26 @@ type SidebarIcon = 'dashboard' | 'operacion' | 'comercial' | 'catalogos' | 'admi
   standalone: true,
   imports: [RouterLink],
   template: `
-    <aside class="flex h-screen flex-col border-r border-slate-200 bg-gradient-to-b from-white via-violet-50 to-indigo-100 text-slate-800 transition-[width] duration-300 dark:border-white/10 dark:from-slate-950 dark:via-indigo-950 dark:to-violet-950/95 dark:text-slate-100" [class.w-72]="!collapsed" [class.w-20]="collapsed">
+    <aside class="relative flex h-screen flex-col border-r border-slate-200 bg-gradient-to-b from-white via-violet-50 to-indigo-100 text-slate-800 transition-[width] duration-300 dark:border-white/10 dark:from-slate-950 dark:via-indigo-950 dark:to-violet-950/95 dark:text-slate-100" [class.w-72]="!collapsed" [class.w-20]="collapsed">
       <div class="border-b border-slate-200 px-4 py-5 dark:border-white/10" [class.px-3]="collapsed">
         <div class="flex items-center gap-3">
           <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-500/20 ring-1 ring-violet-300/30">
             <span class="text-sm font-bold text-violet-700 dark:text-violet-200">SG</span>
           </div>
-          @if (!collapsed) {
+    
+
+      <button type="button" (click)="toggleCollapsed()" class="absolute -right-4 top-5 z-30 inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-300/90 bg-white/95 text-slate-700 shadow-md shadow-slate-400/25 transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700 dark:border-white/20 dark:bg-slate-900/95 dark:text-slate-100 dark:shadow-black/45 dark:hover:border-violet-300/60 dark:hover:bg-violet-500/20 dark:hover:text-violet-100" [attr.aria-label]="collapsed ? 'Expandir navegación' : 'Colapsar navegación'">
+        <svg class="h-5 w-5 transition-transform duration-200" [class.rotate-180]="collapsed" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M12.5 4.5L7 10l5.5 5.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      @if (!collapsed) {
             <div class="min-w-0 flex-1">
               <p class="truncate text-base font-semibold tracking-wide text-slate-900 dark:text-white">Sistema Gym</p>
               <p class="text-xs text-slate-600 dark:text-slate-300">Panel administrativo</p>
             </div>
           }
-          <button type="button" (click)="toggleCollapsed()" class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-300/90 bg-white/85 text-slate-700 shadow-sm transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700 dark:border-white/15 dark:bg-slate-900/70 dark:text-slate-200 dark:hover:border-violet-300/60 dark:hover:bg-violet-500/15 dark:hover:text-violet-100" [attr.aria-label]="collapsed ? 'Expandir navegación lateral' : 'Colapsar navegación lateral'">
-            <svg class="h-5 w-5 transition-transform duration-200" [class.rotate-180]="collapsed" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M12.5 4.5L7 10l5.5 5.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
         </div>
       </div>
 

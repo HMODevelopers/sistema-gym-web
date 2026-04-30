@@ -59,17 +59,17 @@ import { ToastService } from '../../services/toast.service';
           </button>
 
           @if (isUserMenuOpen) {
-            <div class="absolute right-0 top-full z-50 mt-3 w-72 overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xl shadow-slate-300/30 ring-1 ring-black/5 dark:border-white/10 dark:bg-slate-900/98 dark:shadow-black/40 dark:ring-white/10" role="menu">
+            <div class="absolute right-0 top-full z-[70] mt-3 w-72 overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xl shadow-slate-300/30 ring-1 ring-black/5 dark:border-white/10 dark:bg-slate-950/98 dark:shadow-black/55 dark:ring-white/10" role="menu">
               <div class="border-b border-slate-200 p-4 dark:border-white/10">
                 <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ userDisplayName }}</p>
-                <p class="truncate text-xs text-slate-500 dark:text-slate-300">{{ userSecondary }}</p>
+                <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ userSecondary }}</p>
               </div>
               <div class="p-2">
                 <button type="button" (click)="placeholderAction('Mi perfil')" class="menu-item" role="menuitem">Mi perfil</button>
                 <button type="button" (click)="placeholderAction('Configuración')" class="menu-item" role="menuitem">Configuración</button>
                 <button type="button" (click)="placeholderAction('Cambiar contraseña')" class="menu-item" role="menuitem">Cambiar contraseña</button>
                 <div class="my-2 border-t border-slate-200 dark:border-white/10"></div>
-                <button type="button" (click)="logout()" class="menu-item text-rose-500 hover:bg-rose-500/10 dark:text-rose-300" role="menuitem">Cerrar sesión</button>
+                <button type="button" (click)="logout()" class="menu-item text-rose-500 hover:bg-rose-500/10 dark:text-rose-300 dark:hover:bg-rose-500/15" role="menuitem">Cerrar sesión</button>
               </div>
             </div>
           }
@@ -79,7 +79,7 @@ import { ToastService } from '../../services/toast.service';
   `,
   styles: `
     .menu-item {
-      @apply flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-100 dark:hover:bg-white/10 dark:hover:text-white;
+      @apply flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-100 dark:hover:bg-white/5 dark:hover:text-white;
     }
   `,
 })
