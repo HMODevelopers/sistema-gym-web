@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { TopbarComponent } from '../topbar/topbar.component';
@@ -14,12 +14,31 @@ import { TopbarComponent } from '../topbar/topbar.component';
         <div class="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-indigo-500/20 blur-3xl"></div>
       </div>
 
-      <div class="relative hidden md:block">
-        <app-sidebar [collapsed]="sidebarCollapsed" (collapsedChange)="setSidebarCollapsed($event)" />
-      </div>
+      @if (!isDesktop && mobileSidebarOpen) {
+        <button
+          type="button"
+          class="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          (click)="closeMobileSidebar()"
+          aria-label="Cerrar navegación"
+        ></button>
+      }
+
+      <app-sidebar
+        class="relative"
+        [collapsed]="sidebarCollapsed"
+        [isDesktop]="isDesktop"
+        [mobileOpen]="mobileSidebarOpen"
+        (collapsedChange)="setSidebarCollapsed($event)"
+        (menuNavigate)="handleMenuNavigate()"
+      />
 
       <div class="relative z-0 flex min-w-0 flex-1 flex-col">
-        <app-topbar [sidebarCollapsed]="sidebarCollapsed" (sidebarToggle)="setSidebarCollapsed(!sidebarCollapsed)" />
+        <app-topbar
+          [isDesktop]="isDesktop"
+          [sidebarCollapsed]="sidebarCollapsed"
+          [mobileSidebarOpen]="mobileSidebarOpen"
+          (sidebarToggle)="onSidebarToggle()"
+        />
 
         <main class="flex-1 px-4 pb-6 pt-5 md:px-6 md:pt-6 lg:px-8 xl:px-10 2xl:px-12">
           <div class="w-full">
@@ -43,13 +62,50 @@ import { TopbarComponent } from '../topbar/topbar.component';
     </div>
   `,
 })
-export class AppLayoutComponent {
+export class AppLayoutComponent implements OnInit {
   private readonly sidebarStorageKey = 'sistema_gym_sidebar_collapsed';
   sidebarCollapsed = this.readSidebarCollapsed();
+  mobileSidebarOpen = false;
+  isDesktop = false;
+
+  ngOnInit(): void {
+    this.syncViewportMode();
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    this.syncViewportMode();
+  }
+
+  onSidebarToggle(): void {
+    if (this.isDesktop) {
+      this.setSidebarCollapsed(!this.sidebarCollapsed);
+      return;
+    }
+
+    this.mobileSidebarOpen = !this.mobileSidebarOpen;
+  }
+
+  closeMobileSidebar(): void {
+    this.mobileSidebarOpen = false;
+  }
+
+  handleMenuNavigate(): void {
+    if (!this.isDesktop) {
+      this.mobileSidebarOpen = false;
+    }
+  }
 
   setSidebarCollapsed(collapsed: boolean): void {
     this.sidebarCollapsed = collapsed;
     localStorage.setItem(this.sidebarStorageKey, JSON.stringify(collapsed));
+  }
+
+  private syncViewportMode(): void {
+    this.isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+    if (this.isDesktop) {
+      this.mobileSidebarOpen = false;
+    }
   }
 
   private readSidebarCollapsed(): boolean {

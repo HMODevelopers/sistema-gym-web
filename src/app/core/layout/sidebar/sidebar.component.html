@@ -1,12 +1,24 @@
-<aside class="relative flex h-screen flex-col border-r border-slate-200 bg-gradient-to-b from-white via-violet-50 to-indigo-100 text-slate-800 transition-[width] duration-300 dark:border-white/10 dark:from-slate-950 dark:via-indigo-950 dark:to-violet-950/95 dark:text-slate-100" [class.w-72]="!collapsed" [class.w-20]="collapsed">
+<aside
+  class="h-screen flex-col border-r border-slate-200 bg-gradient-to-b from-white via-violet-50 to-indigo-100 text-slate-800 shadow-xl transition-[width,transform] duration-300 dark:border-white/10 dark:from-slate-950 dark:via-indigo-950 dark:to-violet-950/95 dark:text-slate-100 lg:shadow-none"
+  [class.flex]="isDesktop"
+  [class.fixed]="!isDesktop"
+  [class.top-0]="!isDesktop"
+  [class.left-0]="!isDesktop"
+  [class.z-50]="!isDesktop"
+  [class.w-[280px]]="!isDesktop"
+  [class.-translate-x-full]="!isDesktop && !mobileOpen"
+  [class.translate-x-0]="!isDesktop && mobileOpen"
+  [class.w-72]="isDesktop && !collapsed"
+  [class.w-20]="isDesktop && collapsed"
+>
   <div class="border-b border-slate-200 px-3 py-4 dark:border-white/10">
-    <div class="flex h-12 items-center" [class.justify-center]="collapsed" [class.justify-between]="!collapsed">
+    <div class="flex h-12 items-center" [class.justify-center]="isDesktop && collapsed" [class.justify-between]="!isDesktop || !collapsed">
       <div class="flex min-w-0 items-center gap-3">
         <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-500/20 ring-1 ring-violet-300/30">
           <span class="text-sm font-bold text-violet-700 dark:text-violet-200">SG</span>
         </div>
 
-        @if (!collapsed) {
+        @if (!isDesktop || !collapsed) {
           <div class="min-w-0">
             <p class="truncate text-base font-semibold tracking-wide text-slate-900 dark:text-white">Sistema Gym</p>
             <p class="text-xs text-slate-600 dark:text-slate-300">Panel administrativo</p>
@@ -16,31 +28,31 @@
     </div>
   </div>
 
-  @if (!collapsed) {
+  @if (!isDesktop || !collapsed) {
     <div class="px-4 pb-4 pt-5">
       <p class="px-3 text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300">Navegación principal</p>
     </div>
   }
 
-  <nav class="sidebar-nav flex-1 space-y-2 px-3 pb-6 pt-4" [class.overflow-visible]="collapsed" [class.overflow-y-auto]="!collapsed" [class.pt-5]="!collapsed">
+  <nav class="sidebar-nav flex-1 space-y-2 px-3 pb-6 pt-4" [class.overflow-visible]="isDesktop && collapsed" [class.overflow-y-auto]="!isDesktop || !collapsed" [class.pt-5]="!isDesktop || !collapsed">
     @for (entry of navEntries; track entry.label) {
       @if (entry.type === 'item') {
-        <a [routerLink]="entry.path" class="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition" [class.justify-center]="collapsed" [attr.aria-label]="collapsed ? entry.label : null"
+        <a [routerLink]="entry.path" class="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition" [class.justify-center]="isDesktop && collapsed" [attr.aria-label]="isDesktop && collapsed ? entry.label : null"
           [class]="isExactRouteActive(entry.path)
             ? 'bg-violet-500/15 text-violet-800 shadow-[inset_0_0_0_1px_rgba(124,58,237,0.3)] dark:bg-violet-500/20 dark:text-violet-100 dark:shadow-[inset_0_0_0_1px_rgba(167,139,250,0.45)]'
             : 'text-slate-700 hover:bg-violet-500/10 hover:text-violet-700 dark:text-slate-200 dark:hover:bg-violet-500/10 dark:hover:text-violet-100'"
           (click)="closeFlyoutAfterNavigation()">
           <span class="shrink-0 text-current"><app-sidebar-icon [icon]="entry.icon"></app-sidebar-icon></span>
-          @if (!collapsed) { <span>{{ entry.label }}</span> }
+          @if (!isDesktop || !collapsed) { <span>{{ entry.label }}</span> }
         </a>
       } @else {
         <section class="relative space-y-1" (mouseenter)="openFlyout(entry.key)" (mouseleave)="closeFlyoutWithDelay()">
-          <button type="button" (click)="collapsed ? toggleFlyout(entry.key) : toggleGroup(entry.key)" class="group relative flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left text-sm font-medium transition" [class.justify-center]="collapsed" [attr.aria-label]="collapsed ? entry.label : null"
+          <button type="button" (click)="isDesktop && collapsed ? toggleFlyout(entry.key) : toggleGroup(entry.key)" class="group relative flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left text-sm font-medium transition" [class.justify-center]="isDesktop && collapsed" [attr.aria-label]="isDesktop && collapsed ? entry.label : null"
             [class]="isGroupVisuallyActive(entry)
               ? 'border-violet-300/80 bg-violet-500/12 text-violet-800 shadow-[0_0_0_1px_rgba(124,58,237,0.1)] dark:border-violet-300/40 dark:bg-violet-500/16 dark:text-violet-100 dark:shadow-[0_0_16px_rgba(76,29,149,0.32)]'
               : 'border-transparent text-slate-700 hover:border-violet-200/70 hover:bg-violet-500/10 hover:text-violet-700 dark:border-transparent dark:text-slate-200 dark:hover:border-violet-300/30 dark:hover:bg-violet-500/10 dark:hover:text-violet-100'">
             <span class="shrink-0 text-current"><app-sidebar-icon [icon]="entry.icon"></app-sidebar-icon></span>
-            @if (!collapsed) {
+            @if (!isDesktop || !collapsed) {
               <span class="flex-1">{{ entry.label }}</span>
               <svg class="h-4 w-4 text-current transition-transform duration-200" [class.rotate-90]="isGroupExpanded(entry.key)" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8">
                 <path d="M7 4l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
@@ -48,20 +60,21 @@
             }
           </button>
 
-          @if (!collapsed && isGroupExpanded(entry.key)) {
+          @if ((!isDesktop || !collapsed) && isGroupExpanded(entry.key)) {
             <div class="space-y-1 pl-11">
               @for (child of entry.children; track child.path) {
                 <a [routerLink]="child.path" class="block border-l-2 px-3 py-2 text-sm transition"
                   [class]="isExactRouteActive(child.path)
                     ? 'border-violet-400 bg-violet-500/5 text-slate-900 dark:border-violet-300 dark:bg-violet-400/10 dark:text-slate-100'
-                    : 'border-transparent text-slate-600 hover:border-violet-300/70 hover:text-violet-700 dark:text-slate-300 dark:hover:border-violet-300/70 dark:hover:text-violet-100'">
+                    : 'border-transparent text-slate-600 hover:border-violet-300/70 hover:text-violet-700 dark:text-slate-300 dark:hover:border-violet-300/70 dark:hover:text-violet-100'"
+                  (click)="closeFlyoutAfterNavigation()">
                   {{ child.label }}
                 </a>
               }
             </div>
           }
 
-          @if (isFlyoutGroupOpen(entry.key)) {
+          @if (isDesktop && isFlyoutGroupOpen(entry.key)) {
             <div class="absolute left-full top-1/2 z-40 h-12 w-3 -translate-y-1/2" (mouseenter)="cancelCloseFlyout()" (mouseleave)="closeFlyoutWithDelay()" aria-hidden="true"></div>
             <span class="pointer-events-none absolute left-full top-1/2 z-50 ml-0.5 h-0.5 w-3 -translate-y-1/2 rounded-full bg-violet-300/80 dark:bg-violet-300/50"></span>
             <div class="absolute left-full top-1/2 z-50 ml-2 w-64 -translate-y-1/2 rounded-2xl border border-slate-200/90 bg-white/98 p-2.5 shadow-xl shadow-slate-300/30 backdrop-blur-sm dark:border-white/10 dark:bg-slate-950/95 dark:shadow-2xl dark:shadow-violet-950/30" (mouseenter)="cancelCloseFlyout()" (mouseleave)="closeFlyoutWithDelay()">

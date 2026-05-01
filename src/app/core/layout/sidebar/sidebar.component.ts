@@ -30,7 +30,10 @@ type NavEntry = NavItem | NavGroup;
 })
 export class SidebarComponent implements OnInit, OnDestroy {
   @Input() collapsed = false;
+  @Input() isDesktop = true;
+  @Input() mobileOpen = false;
   @Output() collapsedChange = new EventEmitter<boolean>();
+  @Output() menuNavigate = new EventEmitter<void>();
 
   private readonly storageKey = 'sg-sidebar-open-groups';
   private readonly subscription = new Subscription();
@@ -161,6 +164,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   closeFlyoutAfterNavigation(): void {
     this.closeFlyout();
+    this.menuNavigate.emit();
   }
 
   isGroupExpanded(groupKey: string): boolean {
