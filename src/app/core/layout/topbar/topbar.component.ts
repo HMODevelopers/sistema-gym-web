@@ -65,7 +65,7 @@ import { ToastService } from '../../services/toast.service';
           </button>
 
           @if (isUserMenuOpen) {
-            <div class="absolute right-0 top-full z-[70] mt-3 w-72 overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xl shadow-slate-300/30 ring-1 ring-black/5 dark:border-white/10 dark:bg-slate-950/98 dark:shadow-black/55 dark:ring-white/10" role="menu">
+            <div class="absolute right-0 top-full z-[70] mt-3 w-72 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl ring-1 ring-black/5 dark:border-white/10 dark:bg-slate-950 dark:shadow-2xl dark:ring-white/10" role="menu">
               <div class="border-b border-slate-200 p-4 dark:border-white/10">
                 <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ userDisplayName }}</p>
                 <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ userSecondary }}</p>
@@ -74,7 +74,7 @@ import { ToastService } from '../../services/toast.service';
                 <button
                   type="button"
                   (click)="placeholderAction('Mi perfil')"
-                  class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-white/5 dark:hover:text-white"
+                  class="flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/5"
                   role="menuitem"
                 >
                   Mi perfil
@@ -82,7 +82,7 @@ import { ToastService } from '../../services/toast.service';
                 <button
                   type="button"
                   (click)="placeholderAction('Configuración')"
-                  class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-white/5 dark:hover:text-white"
+                  class="flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/5"
                   role="menuitem"
                 >
                   Configuración
@@ -90,7 +90,7 @@ import { ToastService } from '../../services/toast.service';
                 <button
                   type="button"
                   (click)="placeholderAction('Cambiar contraseña')"
-                  class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-white/5 dark:hover:text-white"
+                  class="flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm text-slate-700 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-white/5"
                   role="menuitem"
                 >
                   Cambiar contraseña
@@ -99,7 +99,7 @@ import { ToastService } from '../../services/toast.service';
                 <button
                   type="button"
                   (click)="logout()"
-                  class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-rose-500 transition hover:bg-rose-500/10 hover:text-rose-600 dark:text-rose-300 dark:hover:bg-rose-500/15 dark:hover:text-rose-200"
+                  class="flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10"
                   role="menuitem"
                 >
                   Cerrar sesión
