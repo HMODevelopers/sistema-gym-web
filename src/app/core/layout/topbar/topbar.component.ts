@@ -71,22 +71,45 @@ import { ToastService } from '../../services/toast.service';
                 <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ userSecondary }}</p>
               </div>
               <div class="p-2">
-                <button type="button" (click)="placeholderAction('Mi perfil')" class="menu-item" role="menuitem">Mi perfil</button>
-                <button type="button" (click)="placeholderAction('Configuración')" class="menu-item" role="menuitem">Configuración</button>
-                <button type="button" (click)="placeholderAction('Cambiar contraseña')" class="menu-item" role="menuitem">Cambiar contraseña</button>
+                <button
+                  type="button"
+                  (click)="placeholderAction('Mi perfil')"
+                  class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-white/5 dark:hover:text-white"
+                  role="menuitem"
+                >
+                  Mi perfil
+                </button>
+                <button
+                  type="button"
+                  (click)="placeholderAction('Configuración')"
+                  class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-white/5 dark:hover:text-white"
+                  role="menuitem"
+                >
+                  Configuración
+                </button>
+                <button
+                  type="button"
+                  (click)="placeholderAction('Cambiar contraseña')"
+                  class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-white/5 dark:hover:text-white"
+                  role="menuitem"
+                >
+                  Cambiar contraseña
+                </button>
                 <div class="my-2 border-t border-slate-200 dark:border-white/10"></div>
-                <button type="button" (click)="logout()" class="menu-item text-rose-500 hover:bg-rose-500/10 dark:text-rose-300 dark:hover:bg-rose-500/15" role="menuitem">Cerrar sesión</button>
+                <button
+                  type="button"
+                  (click)="logout()"
+                  class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-rose-500 transition hover:bg-rose-500/10 hover:text-rose-600 dark:text-rose-300 dark:hover:bg-rose-500/15 dark:hover:text-rose-200"
+                  role="menuitem"
+                >
+                  Cerrar sesión
+                </button>
               </div>
             </div>
           }
         </div>
       </div>
     </header>
-  `,
-  styles: `
-    .menu-item {
-      @apply flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-100 dark:hover:bg-white/5 dark:hover:text-white;
-    }
   `,
 })
 export class TopbarComponent {
