@@ -87,7 +87,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ];
 
   expandedGroups: Record<string, boolean> = {};
-  activeFlyoutGroup: string | null = null;
+  activeFlyoutKey: string | null = null;
 
   constructor(private readonly router: Router) {}
 
@@ -111,7 +111,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   toggleGroup(groupKey: string): void {
     if (this.collapsed) {
-      this.toggleFlyoutGroup(groupKey);
+      this.toggleFlyout(groupKey);
       return;
     }
 
@@ -120,26 +120,26 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.persistExpandedGroups();
   }
 
-  toggleFlyoutGroup(groupKey: string): void {
-    this.activeFlyoutGroup = this.activeFlyoutGroup === groupKey ? null : groupKey;
+  openFlyout(groupKey: string): void {
+    if (!this.collapsed) return;
+    this.activeFlyoutKey = groupKey;
   }
 
-  openFlyoutGroup(groupKey: string): void {
-    this.activeFlyoutGroup = groupKey;
+  closeFlyout(): void {
+    this.activeFlyoutKey = null;
   }
 
-  closeFlyoutGroup(groupKey?: string): void {
-    if (!groupKey || this.activeFlyoutGroup === groupKey) {
-      this.activeFlyoutGroup = null;
-    }
+  toggleFlyout(groupKey: string): void {
+    if (!this.collapsed) return;
+    this.activeFlyoutKey = this.activeFlyoutKey === groupKey ? null : groupKey;
   }
 
   isFlyoutGroupOpen(groupKey: string): boolean {
-    return this.collapsed && this.activeFlyoutGroup === groupKey;
+    return this.collapsed && this.activeFlyoutKey === groupKey;
   }
 
   closeFlyoutAfterNavigation(): void {
-    this.activeFlyoutGroup = null;
+    this.closeFlyout();
   }
 
   isGroupExpanded(groupKey: string): boolean {
