@@ -34,7 +34,7 @@
           @if (!collapsed) { <span>{{ entry.label }}</span> }
         </a>
       } @else {
-        <section class="relative space-y-1" (mouseenter)="openFlyout(entry.key)" (mouseleave)="closeFlyout()">
+        <section class="relative space-y-1" (mouseenter)="openFlyout(entry.key)" (mouseleave)="closeFlyoutWithDelay()">
           <button type="button" (click)="collapsed ? toggleFlyout(entry.key) : toggleGroup(entry.key)" class="group relative flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left text-sm font-medium transition" [class.justify-center]="collapsed" [attr.aria-label]="collapsed ? entry.label : null"
             [class]="isGroupVisuallyActive(entry)
               ? 'border-violet-300/80 bg-violet-500/12 text-violet-800 shadow-[0_0_0_1px_rgba(124,58,237,0.1)] dark:border-violet-300/40 dark:bg-violet-500/16 dark:text-violet-100 dark:shadow-[0_0_16px_rgba(76,29,149,0.32)]'
@@ -62,8 +62,9 @@
           }
 
           @if (isFlyoutGroupOpen(entry.key)) {
+            <div class="absolute left-full top-1/2 z-40 h-12 w-3 -translate-y-1/2" (mouseenter)="cancelCloseFlyout()" (mouseleave)="closeFlyoutWithDelay()" aria-hidden="true"></div>
             <span class="pointer-events-none absolute left-full top-1/2 z-50 ml-0.5 h-0.5 w-3 -translate-y-1/2 rounded-full bg-violet-300/80 dark:bg-violet-300/50"></span>
-            <div class="absolute left-full top-1/2 z-50 ml-2 w-64 -translate-y-1/2 rounded-2xl border border-slate-200/90 bg-white/98 p-2.5 shadow-xl shadow-slate-300/30 backdrop-blur-sm dark:border-white/10 dark:bg-slate-950/95 dark:shadow-2xl dark:shadow-violet-950/30">
+            <div class="absolute left-full top-1/2 z-50 ml-2 w-64 -translate-y-1/2 rounded-2xl border border-slate-200/90 bg-white/98 p-2.5 shadow-xl shadow-slate-300/30 backdrop-blur-sm dark:border-white/10 dark:bg-slate-950/95 dark:shadow-2xl dark:shadow-violet-950/30" (mouseenter)="cancelCloseFlyout()" (mouseleave)="closeFlyoutWithDelay()">
               <p class="px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ entry.label }}</p>
               <div class="space-y-1">
                 @for (child of entry.children; track child.path) {

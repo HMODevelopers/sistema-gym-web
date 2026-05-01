@@ -88,6 +88,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   expandedGroups: Record<string, boolean> = {};
   activeFlyoutKey: string | null = null;
+  private closeFlyoutTimer: ReturnType<typeof setTimeout> | null = null;
+  private readonly flyoutCloseDelayMs = 180;
 
   constructor(private readonly router: Router) {}
 
@@ -102,6 +104,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.cancelCloseFlyout();
     this.subscription.unsubscribe();
   }
 
@@ -122,15 +125,33 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   openFlyout(groupKey: string): void {
     if (!this.collapsed) return;
+    this.cancelCloseFlyout();
     this.activeFlyoutKey = groupKey;
   }
 
   closeFlyout(): void {
+    this.cancelCloseFlyout();
     this.activeFlyoutKey = null;
+  }
+
+  closeFlyoutWithDelay(): void {
+    if (!this.collapsed) return;
+    this.cancelCloseFlyout();
+    this.closeFlyoutTimer = setTimeout(() => {
+      this.activeFlyoutKey = null;
+      this.closeFlyoutTimer = null;
+    }, this.flyoutCloseDelayMs);
+  }
+
+  cancelCloseFlyout(): void {
+    if (!this.closeFlyoutTimer) return;
+    clearTimeout(this.closeFlyoutTimer);
+    this.closeFlyoutTimer = null;
   }
 
   toggleFlyout(groupKey: string): void {
     if (!this.collapsed) return;
+    this.cancelCloseFlyout();
     this.activeFlyoutKey = this.activeFlyoutKey === groupKey ? null : groupKey;
   }
 
