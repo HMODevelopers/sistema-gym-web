@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
+import { SidebarIconComponent, SidebarIconName } from './sidebar-icon.component';
 
 interface BaseNav {
   label: string;
-  icon: SidebarIcon;
+  icon: SidebarIconName;
 }
 
 interface NavItem extends BaseNav {
@@ -19,12 +20,11 @@ interface NavGroup extends BaseNav {
 }
 
 type NavEntry = NavItem | NavGroup;
-type SidebarIcon = 'dashboard' | 'operacion' | 'comercial' | 'catalogos' | 'administracion' | 'analisis';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, SidebarIconComponent],
   template: `
     <aside class="relative flex h-screen flex-col border-r border-slate-200 bg-gradient-to-b from-white via-violet-50 to-indigo-100 text-slate-800 transition-[width] duration-300 dark:border-white/10 dark:from-slate-950 dark:via-indigo-950 dark:to-violet-950/95 dark:text-slate-100" [class.w-72]="!collapsed" [class.w-20]="collapsed">
       <div class="border-b border-slate-200 px-3 py-4 dark:border-white/10">
@@ -57,7 +57,7 @@ type SidebarIcon = 'dashboard' | 'operacion' | 'comercial' | 'catalogos' | 'admi
               [class]="isExactRouteActive(entry.path)
                 ? 'bg-violet-500/15 text-violet-800 shadow-[inset_0_0_0_1px_rgba(124,58,237,0.3)] dark:bg-violet-500/20 dark:text-violet-100 dark:shadow-[inset_0_0_0_1px_rgba(167,139,250,0.45)]'
                 : 'text-slate-700 hover:bg-violet-500/10 hover:text-violet-700 dark:text-slate-200 dark:hover:bg-violet-500/10 dark:hover:text-violet-100'">
-              <span class="h-5 w-5 shrink-0" [innerHTML]="getIcon(entry.icon)"></span>
+              <span class="shrink-0 text-current"><app-sidebar-icon [icon]="entry.icon"></app-sidebar-icon></span>
               @if (!collapsed) { <span>{{ entry.label }}</span> }
             </a>
           } @else {
@@ -66,7 +66,7 @@ type SidebarIcon = 'dashboard' | 'operacion' | 'comercial' | 'catalogos' | 'admi
                 [class]="isGroupHighlighted(entry)
                   ? 'text-violet-800 bg-violet-500/8 dark:text-violet-100 dark:bg-violet-400/8'
                   : 'text-slate-700 hover:bg-violet-500/10 hover:text-violet-700 dark:text-slate-200 dark:hover:bg-violet-500/10 dark:hover:text-violet-100'">
-                <span class="h-5 w-5 shrink-0" [innerHTML]="getIcon(entry.icon)"></span>
+                <span class="shrink-0 text-current"><app-sidebar-icon [icon]="entry.icon"></app-sidebar-icon></span>
                 @if (!collapsed) {
                   <span class="flex-1">{{ entry.label }}</span>
                   <svg class="h-4 w-4 text-current transition-transform duration-200" [class.rotate-90]="isGroupExpanded(entry.key)" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -192,5 +192,5 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
   }
   private persistExpandedGroups(): void { localStorage.setItem(this.storageKey, JSON.stringify(this.expandedGroups)); }
-  getIcon(icon: SidebarIcon): string { const classes = 'h-5 w-5'; switch (icon) { case 'dashboard': return `<svg class="${classes}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 11.5l8.5-7 8.5 7" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10.5V20h12v-9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`; case 'operacion': return `<svg class="${classes}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 4v5c0 4.4-2.8 7.8-7 9-4.2-1.2-7-4.6-7-9V7l7-4z"/><path d="M8 12h8" stroke-linecap="round"/></svg>`; case 'comercial': return `<svg class="${classes}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 19v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1"/><circle cx="9.5" cy="8" r="3"/><path d="M17 11a3 3 0 1 1 0 6"/></svg>`; case 'catalogos': return `<svg class="${classes}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h6l2 2h10v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/><path d="M3 7V5a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v2"/></svg>`; case 'administracion': return `<svg class="${classes}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .33 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.4-1.7 1.7 1.7 0 0 0-1 .2 1.7 1.7 0 0 0-.6.5l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.1-.4H3.4a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 5.2 9.2a1.7 1.7 0 0 0-.2-1 1.7 1.7 0 0 0-.5-.6l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 .4-1.1V3.4a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1.4 1.7 1.7 1.7 0 0 0 1-.2 1.7 1.7 0 0 0 .6-.5l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.2.3.3.7.3 1.1v.1a2 2 0 1 1 0 4h-.1c-.4 0-.8.1-1.1.3z"/></svg>`; case 'analisis': return `<svg class="${classes}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V6" stroke-linecap="round"/><path d="M4 20h16" stroke-linecap="round"/><path d="M8 16v-3M12 16V9M16 16v-6" stroke-linecap="round"/></svg>`; } }
+
 }

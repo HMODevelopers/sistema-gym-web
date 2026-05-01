@@ -30,12 +30,12 @@ import { TopbarComponent } from '../topbar/topbar.component';
         <footer class="border-t border-slate-200 bg-white/80 dark:border-white/10 dark:bg-slate-900/70 px-4 py-4 backdrop-blur md:px-6 lg:px-8 xl:px-10 2xl:px-12">
           <div class="flex w-full flex-col gap-3 text-xs text-slate-600 dark:text-slate-400 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p class="font-semibold uppercase tracking-wide text-slate-700 dark:text-slate-200">Sistema Gym</p>
+              <p class="font-semibold uppercase tracking-wide text-slate-700 dark:text-slate-200">SYS GYM</p>
               <p class="mt-1">Sistema administrativo para operación de gimnasio.</p>
             </div>
             <div class="text-left sm:text-right">
               <p>Versión 1.0.0 · © 2026</p>
-              <p class="mt-1">Desarrollado para administración y control de acceso.</p>
+              <p class="mt-1">HMO Developers.</p>
             </div>
           </div>
         </footer>
