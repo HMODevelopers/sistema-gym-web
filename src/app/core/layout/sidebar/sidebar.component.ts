@@ -150,6 +150,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     return this.isGroupExpanded(group.key) || this.isGroupRouteActive(group);
   }
 
+  isGroupVisuallyActive(group: NavGroup): boolean {
+    return this.isGroupHighlighted(group) || this.isFlyoutGroupOpen(group.key);
+  }
+
   isExactRouteActive(path: string): boolean {
     return this.router.isActive(path, { paths: 'exact', queryParams: 'ignored', fragment: 'ignored', matrixParams: 'ignored' });
   }
