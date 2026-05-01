@@ -29,9 +29,11 @@ type NavEntry = NavItem | NavGroup;
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent implements OnInit, OnDestroy {
+  // Bindings recibidos desde AppLayoutComponent
+  @Input() mobileOpen = false;
   @Input() collapsed = false;
   @Input() isDesktop = true;
-  @Input() mobileOpen = false;
+
   @Output() collapsedChange = new EventEmitter<boolean>();
   @Output() menuNavigate = new EventEmitter<void>();
 

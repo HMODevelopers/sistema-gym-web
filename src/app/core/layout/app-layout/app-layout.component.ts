@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, NO_ERRORS_SCHEMA, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { TopbarComponent } from '../topbar/topbar.component';
@@ -7,6 +7,7 @@ import { TopbarComponent } from '../topbar/topbar.component';
   selector: 'app-app-layout',
   standalone: true,
   imports: [RouterOutlet, SidebarComponent, TopbarComponent],
+  schemas: [NO_ERRORS_SCHEMA],
   template: `
     <div class="relative flex min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <div class="pointer-events-none absolute inset-0 overflow-hidden">
@@ -22,6 +23,7 @@ import { TopbarComponent } from '../topbar/topbar.component';
           aria-label="Cerrar navegación"
         ></button>
       }
+      
 
       <app-sidebar
         class="relative"
@@ -46,12 +48,17 @@ import { TopbarComponent } from '../topbar/topbar.component';
           </div>
         </main>
 
-        <footer class="border-t border-slate-200 bg-white/80 dark:border-white/10 dark:bg-slate-900/70 px-4 py-4 backdrop-blur md:px-6 lg:px-8 xl:px-10 2xl:px-12">
+        <footer class="border-t border-slate-200 bg-white/80 px-4 py-4 backdrop-blur dark:border-white/10 dark:bg-slate-900/70 md:px-6 lg:px-8 xl:px-10 2xl:px-12">
           <div class="flex w-full flex-col gap-3 text-xs text-slate-600 dark:text-slate-400 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p class="font-semibold uppercase tracking-wide text-slate-700 dark:text-slate-200">SYS GYM</p>
-              <p class="mt-1">Sistema administrativo para operación de gimnasio.</p>
+              <p class="font-semibold uppercase tracking-wide text-slate-700 dark:text-slate-200">
+                SYS GYM
+              </p>
+              <p class="mt-1">
+                Sistema administrativo para operación de gimnasio.
+              </p>
             </div>
+
             <div class="text-left sm:text-right">
               <p>Versión 1.0.0 · © 2026</p>
               <p class="mt-1">HMO Developers.</p>
@@ -64,6 +71,7 @@ import { TopbarComponent } from '../topbar/topbar.component';
 })
 export class AppLayoutComponent implements OnInit {
   private readonly sidebarStorageKey = 'sistema_gym_sidebar_collapsed';
+
   sidebarCollapsed = this.readSidebarCollapsed();
   mobileSidebarOpen = false;
   isDesktop = false;
@@ -103,6 +111,7 @@ export class AppLayoutComponent implements OnInit {
 
   private syncViewportMode(): void {
     this.isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+
     if (this.isDesktop) {
       this.mobileSidebarOpen = false;
     }
@@ -110,6 +119,6 @@ export class AppLayoutComponent implements OnInit {
 
   private readSidebarCollapsed(): boolean {
     const raw = localStorage.getItem(this.sidebarStorageKey);
-    return raw ? raw === 'true' : false;
+    return raw === 'true';
   }
 }
