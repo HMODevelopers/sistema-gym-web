@@ -37,6 +37,18 @@ export class SidebarComponent implements OnInit, OnDestroy {
   @Output() collapsedChange = new EventEmitter<boolean>();
   @Output() menuNavigate = new EventEmitter<void>();
 
+  get isDesktopCollapsed(): boolean {
+    return this.isDesktop && this.collapsed;
+  }
+
+  get isMobileDrawer(): boolean {
+    return !this.isDesktop && this.mobileOpen;
+  }
+
+  get shouldShowInlineChildren(): boolean {
+    return !this.isDesktopCollapsed;
+  }
+
   private readonly storageKey = 'sg-sidebar-open-groups';
   private readonly subscription = new Subscription();
   readonly navEntries: NavEntry[] = [
@@ -118,7 +130,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   toggleGroup(groupKey: string): void {
-    if (this.collapsed) {
+    if (this.isDesktopCollapsed) {
       this.toggleFlyout(groupKey);
       return;
     }
@@ -129,7 +141,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   openFlyout(groupKey: string): void {
-    if (!this.collapsed) return;
+    if (!this.isDesktopCollapsed) return;
     this.cancelCloseFlyout();
     this.activeFlyoutKey = groupKey;
   }
@@ -140,7 +152,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   closeFlyoutWithDelay(): void {
-    if (!this.collapsed) return;
+    if (!this.isDesktopCollapsed) return;
     this.cancelCloseFlyout();
     this.closeFlyoutTimer = setTimeout(() => {
       this.activeFlyoutKey = null;
@@ -155,13 +167,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   toggleFlyout(groupKey: string): void {
-    if (!this.collapsed) return;
+    if (!this.isDesktopCollapsed) return;
     this.cancelCloseFlyout();
     this.activeFlyoutKey = this.activeFlyoutKey === groupKey ? null : groupKey;
   }
 
   isFlyoutGroupOpen(groupKey: string): boolean {
-    return this.collapsed && this.activeFlyoutKey === groupKey;
+    return this.isDesktopCollapsed && this.activeFlyoutKey === groupKey;
   }
 
   closeFlyoutAfterNavigation(): void {
