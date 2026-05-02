@@ -46,24 +46,44 @@ export class AuthService {
   }
 
   getSession(): AuthSession | null {
-    const sessionString = localStorage.getItem(this.authSessionKey);
-    if (!sessionString) {
+    const sessionFromStorage = this.parseSession(localStorage.getItem(this.authSessionKey));
+    if (sessionFromStorage) {
+      return sessionFromStorage;
+    }
+
+    const token = localStorage.getItem(this.authTokenKey)?.trim();
+    const user = this.parseJson<AuthUser>(localStorage.getItem(this.authUserKey));
+    const roles = this.parseArray(localStorage.getItem(this.authRolesKey));
+    const permissions = this.parseArray(localStorage.getItem(this.authPermisosKey));
+
+    if (!token || !user) {
       return null;
     }
 
-    try {
-      return JSON.parse(sessionString) as AuthSession;
-    } catch {
-      this.clearSession();
-      return null;
-    }
+    const fallbackSession: AuthSession = {
+      token,
+      user,
+      roles,
+      permissions,
+    };
+
+    this.setSession(fallbackSession);
+    return fallbackSession;
+  }
+
+  getRoles(): string[] {
+    return this.getSession()?.roles ?? [];
+  }
+
+  getPermissions(): string[] {
+    return this.getSession()?.permissions ?? [];
   }
 
   setSession(session: AuthSession): void {
     localStorage.setItem(this.authTokenKey, session.token);
     localStorage.setItem(this.authUserKey, JSON.stringify(session.user));
     localStorage.setItem(this.authRolesKey, JSON.stringify(session.roles));
-    localStorage.setItem(this.authPermisosKey, JSON.stringify(session.permisos));
+    localStorage.setItem(this.authPermisosKey, JSON.stringify(session.permissions));
     localStorage.setItem(this.authSessionKey, JSON.stringify(session));
   }
 
@@ -76,34 +96,75 @@ export class AuthService {
   }
 
   hasPermission(permission: string): boolean {
-    const session = this.getSession();
-    return !!session?.permisos.includes(permission);
+    return this.getPermissions().includes(permission);
   }
 
   hasAnyPermission(permissions: string[]): boolean {
-    const session = this.getSession();
-    if (!session) {
-      return false;
-    }
-    return permissions.some((permission) => session.permisos.includes(permission));
+    const sessionPermissions = this.getPermissions();
+    return permissions.some((permission) => sessionPermissions.includes(permission));
+  }
+
+  hasAllPermissions(permissions: string[]): boolean {
+    const sessionPermissions = this.getPermissions();
+    return permissions.every((permission) => sessionPermissions.includes(permission));
   }
 
   hasRole(role: string): boolean {
-    const session = this.getSession();
-    return !!session?.roles.includes(role);
+    return this.getRoles().includes(role);
+  }
+
+  hasAnyRole(roles: string[]): boolean {
+    const sessionRoles = this.getRoles();
+    return roles.some((role) => sessionRoles.includes(role));
   }
 
   private mapSession(response: AuthLoginResponse): AuthSession {
-    const token = response.data?.token?.trim();
+    const data = response.data;
+    const token = data?.token?.trim();
+
     if (!token) {
       throw new Error('La respuesta de autenticación no incluye token.');
     }
 
     return {
       token,
-      user: response.data.usuario,
-      roles: response.data.roles ?? [],
-      permisos: response.data.permisos ?? [],
+      user: data.usuario,
+      roles: data.auth?.roles ?? data.roles ?? [],
+      permissions: data.auth?.permisos ?? [],
     };
+  }
+
+  private parseSession(rawSession: string | null): AuthSession | null {
+    const parsed = this.parseJson<AuthSession>(rawSession);
+    if (!parsed?.token || !parsed.user) {
+      if (rawSession) {
+        this.clearSession();
+      }
+      return null;
+    }
+
+    return {
+      token: parsed.token,
+      user: parsed.user,
+      roles: Array.isArray(parsed.roles) ? parsed.roles : [],
+      permissions: Array.isArray(parsed.permissions) ? parsed.permissions : [],
+    };
+  }
+
+  private parseJson<T>(value: string | null): T | null {
+    if (!value) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(value) as T;
+    } catch {
+      return null;
+    }
+  }
+
+  private parseArray(value: string | null): string[] {
+    const parsed = this.parseJson<unknown>(value);
+    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === 'string') : [];
   }
 }

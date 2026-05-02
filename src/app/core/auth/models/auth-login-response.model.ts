@@ -4,8 +4,11 @@ export interface AuthLoginResponse {
   message: string;
   data: {
     usuario: AuthUser;
-    roles: string[];
-    permisos: string[];
+    roles?: string[];
     token: string;
+    auth?: {
+      roles?: string[];
+      permisos?: string[];
+    };
   };
 }
