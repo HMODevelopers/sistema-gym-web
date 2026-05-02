@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, map, tap } from 'rxjs';
-import { API_BASE_URL } from '../../config/api.config';
+import { environment } from '../../../../environments/environment';
 import { AuthLoginRequest } from '../models/auth-login-request.model';
 import { AuthLoginResponse } from '../models/auth-login-response.model';
 import { AuthSession } from '../models/auth-session.model';
@@ -22,7 +22,7 @@ export class AuthService {
   ) {}
 
   login(credentials: AuthLoginRequest): Observable<AuthSession> {
-    return this.http.post<AuthLoginResponse>(`${API_BASE_URL}/auth/login`, credentials).pipe(
+    return this.http.post<AuthLoginResponse>(`${environment.apiUrl}/auth/login`, credentials).pipe(
       map((response) => this.mapSession(response)),
       tap((session) => this.setSession(session)),
     );
