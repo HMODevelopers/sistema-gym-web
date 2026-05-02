@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
+import { AuthService } from '../../auth/services/auth.service';
 import { SidebarIconComponent, SidebarIconName } from './sidebar-icon.component';
 
 interface BaseNav {
@@ -11,11 +12,19 @@ interface BaseNav {
 interface NavItem extends BaseNav {
   type: 'item';
   path: string;
+  permission?: string;
+  permissions?: string[];
+  requireAllPermissions?: boolean;
+  roles?: string[];
 }
 
 interface NavGroup extends BaseNav {
   type: 'group';
   key: string;
+  permission?: string;
+  permissions?: string[];
+  requireAllPermissions?: boolean;
+  roles?: string[];
   children: Array<Omit<NavItem, 'type' | 'icon'> & { path: string; label: string }>;
 }
 
@@ -59,8 +68,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       label: 'Operación',
       icon: 'operacion',
       children: [
-        { label: 'Recepción', path: '/recepcion' },
-        { label: 'Accesos', path: '/accesos' },
+        { label: 'Recepción', path: '/recepcion', permissions: ['accesos.ver', 'accesos.validar'] },
+        { label: 'Accesos', path: '/accesos', permission: 'accesos.ver' },
       ],
     },
     {
@@ -69,9 +78,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
       label: 'Comercial',
       icon: 'comercial',
       children: [
-        { label: 'Clientes', path: '/clientes' },
-        { label: 'Membresías', path: '/membresias' },
-        { label: 'Pagos', path: '/pagos' },
+        { label: 'Clientes', path: '/clientes', permission: 'clientes.ver' },
+        { label: 'Membresías', path: '/membresias', permission: 'membresias.ver' },
+        { label: 'Pagos', path: '/pagos', permission: 'pagos.ver' },
       ],
     },
     {
@@ -80,8 +89,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       label: 'Catálogos',
       icon: 'catalogos',
       children: [
-        { label: 'Planes', path: '/planes' },
-        { label: 'Sucursales', path: '/sucursales' },
+        { label: 'Planes', path: '/planes', permission: 'planes.ver' },
+        { label: 'Sucursales', path: '/sucursales', permission: 'sucursales.ver' },
       ],
     },
     {
@@ -90,8 +99,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       label: 'Administración',
       icon: 'administracion',
       children: [
-        { label: 'Usuarios', path: '/usuarios' },
-        { label: 'Roles', path: '/roles' },
+        { label: 'Usuarios', path: '/usuarios', permission: 'usuarios.ver' },
+        { label: 'Roles', path: '/roles', permission: 'roles.ver' },
       ],
     },
     {
@@ -99,18 +108,23 @@ export class SidebarComponent implements OnInit, OnDestroy {
       key: 'analisis',
       label: 'Análisis',
       icon: 'analisis',
-      children: [{ label: 'Reportes', path: '/reportes' }],
+      children: [{ label: 'Reportes', path: '/reportes', permission: 'reportes.ver' }],
     },
   ];
+  visibleNavEntries: NavEntry[] = [];
 
   expandedGroups: Record<string, boolean> = {};
   activeFlyoutKey: string | null = null;
   private closeFlyoutTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly flyoutCloseDelayMs = 180;
 
-  constructor(private readonly router: Router) {}
+  constructor(
+    private readonly router: Router,
+    private readonly authService: AuthService,
+  ) {}
 
   ngOnInit(): void {
+    this.visibleNavEntries = this.filterMenuByPermissions(this.navEntries);
     this.expandedGroups = this.readStoredGroups();
     this.ensureRouteGroupOpen(this.router.url);
     this.subscription.add(
@@ -212,9 +226,40 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   private findGroupByUrl(url: string): NavGroup | undefined {
-    return this.navEntries.find(
+    return this.visibleNavEntries.find(
       (entry): entry is NavGroup => entry.type === 'group' && entry.children.some((child) => this.isPathInUrl(child.path, url)),
     );
+  }
+
+  private filterMenuByPermissions(items: NavEntry[]): NavEntry[] {
+    return items.reduce<NavEntry[]>((acc, item) => {
+      if (item.type === 'item') {
+        if (this.canShowMenuItem(item)) {
+          acc.push({ ...item });
+        }
+        return acc;
+      }
+
+      const children = item.children.filter((child) => this.canShowMenuItem(child)).map((child) => ({ ...child }));
+      if (!children.length || !this.canShowMenuItem(item)) {
+        return acc;
+      }
+
+      acc.push({ ...item, children });
+      return acc;
+    }, []);
+  }
+
+  private canShowMenuItem(item: { permission?: string; permissions?: string[]; requireAllPermissions?: boolean; roles?: string[] }): boolean {
+    if (item.permission && !this.authService.hasPermission(item.permission)) return false;
+    if (item.roles?.length && !this.authService.hasAnyRole(item.roles)) return false;
+    if (item.permissions?.length) {
+      return item.requireAllPermissions
+        ? this.authService.hasAllPermissions(item.permissions)
+        : this.authService.hasAnyPermission(item.permissions);
+    }
+
+    return true;
   }
 
   private createSingleOpenState(groupKey: string): Record<string, boolean> {

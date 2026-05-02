@@ -35,7 +35,7 @@
   }
 
   <nav class="sidebar-nav flex-1 space-y-2 px-3 pb-6 pt-4" [class.overflow-visible]="isDesktopCollapsed" [class.overflow-y-auto]="shouldShowInlineChildren" [class.pt-5]="shouldShowInlineChildren">
-    @for (entry of navEntries; track entry.label) {
+    @for (entry of visibleNavEntries; track entry.label) {
       @if (entry.type === 'item') {
         <a [routerLink]="entry.path" class="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition" [class.justify-center]="isDesktopCollapsed" [attr.aria-label]="isDesktopCollapsed ? entry.label : null"
           [class]="isExactRouteActive(entry.path)
